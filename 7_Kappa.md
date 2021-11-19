@@ -85,7 +85,7 @@ $P(items\ rated\ the\ same)$
 ## Weighted Kappa
 - **weighted kappa** - accounts for degree of disagreement
 - useful when ratings are ordered
-  - i.e. diagreement between good and bad should have more weight than disagreement between good and meh
+  - i.e. disagreement between good and bad should have more weight than disagreement between good and meh
 - consists of **3 matrices**
   - observed agreement matrix
   - expected agreement matrix
@@ -98,7 +98,7 @@ $P(items\ rated\ the\ same)$
   - other weights determined by distance between ratings
     - good/meh and meh/bad = 1, good/bad = 2
 - $k = 1-\frac{\sum{\sum{w_{ij}x_{ij}}}}{\sum{\sum{w_{ij}m_{ij}}}}$
-  - sum of products of wirght and observed agreement matrices divided by sum of products of weight and expected agreement matrices
+  - sum of products of weight and observed agreement matrices divided by sum of products of weight and expected agreement matrices
 
 ## Other Inter-Rater Reliability Methods
 - **Fleiss' kappa** - multiple raters, ordinal data
