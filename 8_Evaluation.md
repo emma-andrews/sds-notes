@@ -1,6 +1,6 @@
-# Dialogue System Evaluation
+# 8 - Dialogue System Evaluation
 
-## Evaluation
+## Dialogue Evaluation
 - things we can measure about how well a dialogue went
   - user satisfaction
   - learning
@@ -41,3 +41,4 @@
 - methods for automatically evaluating system performance
 - way of obtaining training data for further system development
 - can we find intrinsic evaluation metrics that correlate with extrinsic results?
+

@@ -143,3 +143,4 @@
     - but it is the *estimate* that makes it *most likely* that "bagel" will occur 400 times in a million word corpus
 - Add-1 is a *blunt instrument*, so it is not used for N-grams
 - used to smooth other NLP models for text classification and in domains where the number of zeros is not huge
+

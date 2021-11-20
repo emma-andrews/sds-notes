@@ -158,3 +158,4 @@
   - ignore badly aligned regions
   - modify Needleman-Wunsch
   - want to have local alignment
+

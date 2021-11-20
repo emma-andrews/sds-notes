@@ -106,3 +106,4 @@ $P(items\ rated\ the\ same)$
 - **Pearson's correlation coefficient and Spearman's rank correlation coefficient** - used for continuous data
 - **Krippendorff's alpha** - generalizable to multiple raters and data types
 - **Cronbach's alpha** - validating psychometric test items
+
