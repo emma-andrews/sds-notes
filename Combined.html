@@ -92,6 +92,18 @@
 <li><a href="#58-harms-in-classification">5.8. Harms in Classification</a></li>
 </ul>
 </li>
+<li><a href="#6-12---vector-semantics">6. 12 - Vector Semantics</a>
+<ul>
+<li><a href="#61-word-meaning">6.1. Word Meaning</a></li>
+<li><a href="#62-word-relation">6.2. Word Relation</a></li>
+<li><a href="#63-vector-semantics">6.3. Vector Semantics</a></li>
+<li><a href="#64-words-and-vectors">6.4. Words and Vectors</a></li>
+<li><a href="#65-computing-word-similarity">6.5. Computing Word Similarity</a></li>
+<li><a href="#66-tf-idf">6.6. TF-IDF</a></li>
+<li><a href="#67-sparse-vs-dense-vectors">6.7. Sparse vs. Dense Vectors</a></li>
+<li><a href="#68-word2vec">6.8. Word2vec</a></li>
+</ul>
+</li>
 </ul>
 <h1 id="1-7---kappa">1. 7 - Kappa</h1>
 <h2 id="11-inter-rater-reliability">1.1. Inter-Rater Reliability</h2>
@@ -1212,6 +1224,374 @@
 <li>evaluation data sources, motivation, and preprocessing</li>
 <li>intended use and users</li>
 <li>model performance across different demographic or other groups and environmental situations</li>
+</ul>
+</li>
+</ul>
+<h1 id="6-12---vector-semantics">6. 12 - Vector Semantics</h1>
+<h2 id="61-word-meaning">6.1. Word Meaning</h2>
+<ul>
+<li>in N-gram or text classification methods, words are just strings
+<ul>
+<li>not very satisfactory</li>
+</ul>
+</li>
+<li>from <strong>lexical semantics</strong>, the linguistic study of word meaning</li>
+<li><strong>sense/concept</strong> - meaning component of a word</li>
+<li>lemmas can be <strong>polysemous</strong> - have multiple senses</li>
+</ul>
+<h2 id="62-word-relation">6.2. Word Relation</h2>
+<ul>
+<li><strong>synonyms</strong> - words that have the same meaning in some or all contexts
+<ul>
+<li>there are probably no examples of perfect synonymy, even if many aspects of meaning are identical
+<ul>
+<li>still may differ bassed on politeness, slang, register, genre, etc</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>similarity</strong> - words with similar meanings
+<ul>
+<li>not synonyms, but <em>sharing some</em> element of meaning</li>
+</ul>
+</li>
+<li><strong>word relatedness/association</strong> - relation of words in any way, such as via a semantic frame or field
+<ul>
+<li>coffee, tea are similar</li>
+<li>coffee, cup are related, but not similar</li>
+</ul>
+</li>
+<li><strong>semantic field</strong> - words that
+<ul>
+<li>cover a particular <em>semantic domain</em></li>
+<li>bear <em>structured relations</em> with each other</li>
+<li>hospitals - surgeon, scalpel, nurse, hospital</li>
+<li>restaurants - waiter, menu, plate, food, chef</li>
+<li>houses - door, roof, kitchen, family, bed</li>
+</ul>
+</li>
+<li><strong>antonymy</strong> - senses that are opposite with respect to only one feature of meaning
+<ul>
+<li>otherwise they are very similar</li>
+<li>dark/light, short/long, fast/slow, rise/fall, hot/cold, etc</li>
+<li>more formally, <em>anyonymy</em> can
+<ul>
+<li>define a binary opposition or be at opposite ends of a scale (i.e. long/short, fast/slow)</li>
+<li>be <em>reversives</em> (i.e. rise/fall, up/down)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>connotation</strong> - words have affective meanings
+<ul>
+<li>positive or negative</li>
+<li>can be <em>subtle</em></li>
+<li>evaluation is the sentiment</li>
+<li>words seem to vary along <strong>3 affective dimensions</strong>
+<ul>
+<li><strong>valence</strong> - the pleasantness of the stimulus</li>
+<li><strong>arousal</strong> - the intensity of emotion provoked by the stimulus</li>
+<li><strong>dominance</strong> - the degree of control exerted by the stimulus</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><em>summary so far</em>
+<ul>
+<li>concepts or word senses have a complex many-to-many association with words</li>
+<li>have relations with each other</li>
+</ul>
+</li>
+</ul>
+<h2 id="63-vector-semantics">6.3. Vector Semantics</h2>
+<ul>
+<li><strong>vector semantics</strong> - model in language processing</li>
+<li>define words by their <strong>usage</strong> - defined by their environments (words around them)</li>
+<li>if A and B have almost identical environments we say that they are <strong>synonyms</strong></li>
+<li><strong>idea 1</strong> - define meaning by <em>linguistic distribution</em>
+<ul>
+<li>distribution in language use = neighboring words or grammatical environments</li>
+</ul>
+</li>
+<li><strong>idea 2</strong> - define meaning as a <em>point in space</em>
+<ul>
+<li>3 affective dimensions for a word</li>
+<li>connotation of a word is a vector in 3-space</li>
+<li>each word is a <strong>vector</strong></li>
+<li>similar words are <em>nearby in semantic space</em></li>
+<li>build this space <em>automatically</em> by seeing which words are nearby in text</li>
+</ul>
+</li>
+<li>define meaning of a word as a <strong>vector</strong>
+<ul>
+<li>called an <strong>embedding</strong> because it is embedded into a space</li>
+<li>standard way to represent meaning in NLP</li>
+<li>fine-grained model of meaning for similarity</li>
+</ul>
+</li>
+<li><strong>but why vectors?</strong>
+<ul>
+<li>consider <em>sentiment analysis</em>
+<ul>
+<li>with <strong>words</strong> a feature is a word identity
+<ul>
+<li>feature 5: &quot;the previous word was &quot;terrible&quot;&quot; requires <em>exact same word</em> to be in training and test</li>
+</ul>
+</li>
+<li>with <strong>embeddings</strong> feature is a <em>word vector</em>
+<ul>
+<li>&quot;the previous word was vector [35, 22, 17...]</li>
+<li>now in the test set we might see a similar vector [34, 21, 14...]</li>
+<li>we can generalize to <em>similar but unseen</em> words</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>2 kinds of embeddings
+<ul>
+<li><strong>tf-idf</strong>
+<ul>
+<li>information retrieval workhorse</li>
+<li>common baseline model</li>
+<li><em>sparse</em> vectors</li>
+<li>words are represented by the <em>counts</em> of nearby words</li>
+</ul>
+</li>
+<li><strong>word2vec</strong>
+<ul>
+<li><em>dense</em> vectors</li>
+<li>representation is created by training a classifier to <em>predict</em> whether a word is likely to appear nearby</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>now we are computing with meaning representations instead of string representations</li>
+</ul>
+<h2 id="64-words-and-vectors">6.4. Words and Vectors</h2>
+<ul>
+<li><strong>term-document matrix</strong> - each document is represented by a vector of words
+<ul>
+<li><img src="file:///d:\Spoken Dialogue Systems\Notes\images\vector1.png" alt=""></li>
+<li>can visualize with a graph where one word is x axis and another is y</li>
+</ul>
+</li>
+<li>vectors are the basis of <em>information retrieval</em>
+<ul>
+<li>in previous matrix, vectors are similar for the two comedies, but comedies are different than the other two
+<ul>
+<li>comedies have more fools and wit and fewer battles</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>words can be vectors too
+<ul>
+<li><img src="file:///d:\Spoken Dialogue Systems\Notes\images\vector2.png" alt=""></li>
+<li>battle is the kind of word that occurs in Julius Caesar and Henry V</li>
+<li>fool is the kind of word that occurs in comedies, especially Twelfth Night</li>
+</ul>
+</li>
+<li><strong>word-word/term-context matrix</strong> - two words are similar in meaning if their context vectors are similar
+<ul>
+<li>more commonly used</li>
+<li><img src="file:///d:\Spoken Dialogue Systems\Notes\images\vector3.png" alt=""></li>
+<li>if context is a document, cells represent the number of times both the words appeared in the same document</li>
+</ul>
+</li>
+</ul>
+<h2 id="65-computing-word-similarity">6.5. Computing Word Similarity</h2>
+<ul>
+<li>dot product between two vectors is a scalar
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>o</mi><mi>t</mi><mtext> </mtext><mi>p</mi><mi>r</mi><mi>o</mi><mi>d</mi><mi>u</mi><mi>c</mi><mi>t</mi><mo stretchy="false">(</mo><mi>v</mi><mo separator="true">,</mo><mi>w</mi><mo stretchy="false">)</mo><mo>=</mo><mi>v</mi><mo>⋅</mo><mi>w</mi><mo>=</mo><msub><mi>v</mi><mn>1</mn></msub><msub><mi>w</mi><mn>1</mn></msub><mo>+</mo><msub><mi>v</mi><mn>2</mn></msub><msub><mi>w</mi><mn>2</mn></msub><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>+</mo><msub><mi>v</mi><mi>N</mi></msub><msub><mi>w</mi><mi>N</mi></msub></mrow><annotation encoding="application/x-tex">dot\ product(v,w)=v\cdot w = v_1w_1+v_2w_2+...+v_Nw_N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">o</span><span class="mord mathnormal">t</span><span class="mspace"> </span><span class="mord mathnormal">p</span><span class="mord mathnormal">ro</span><span class="mord mathnormal">d</span><span class="mord mathnormal">u</span><span class="mord mathnormal">c</span><span class="mord mathnormal">t</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.44445em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.73333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.73333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">...</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
+</ul>
+</li>
+<li>dot product tends to be high when the two vectors have large values in the same dimensions</li>
+<li>dot product can thus be a useful <em>similarity metric</em> between two vectors</li>
+<li><strong>problem</strong> with raw dot-product
+<ul>
+<li>favors long vectors</li>
+<li>higher if a vector is longer (has higher values in many dimensions)</li>
+<li><strong>vector length</strong> - <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>v</mi><mi mathvariant="normal">∣</mi><mo>=</mo><msqrt><mrow><mi mathvariant="normal">Σ</mi><mrow><mo stretchy="false">(</mo><mi>i</mi><mo>=</mo><mn>1</mn><mo>:</mo><mi>N</mi><mo stretchy="false">)</mo></mrow><mrow><mtext> </mtext><msubsup><mi>v</mi><mi>i</mi><mn>2</mn></msubsup></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">|v|=\sqrt{\Sigma {(i=1:N)}{\ v_i^2}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.2954779999999999em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9445220000000001em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord">Σ</span><span class="mord"><span class="mopen">(</span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span><span class="mord"><span class="mspace"> </span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7959080000000001em;"><span style="top:-2.4231360000000004em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.0448000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.27686399999999994em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-2.904522em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg width='400em' height='1.28em' viewBox='0 0 400000 1296' preserveAspectRatio='xMinYMin slice'><path d='M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2954779999999999em;"><span></span></span></span></span></span></span></span></span></li>
+<li>frequent words (of, the, you) have long vectors, since they occur many times with other words</li>
+<li>therefore, dot product <em>overly favors frequent words</em></li>
+</ul>
+</li>
+<li><strong>alternative</strong> - use cosine for computing word similarity
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>a</mi><mo>⋅</mo><mi>b</mi></mrow><mrow><mi mathvariant="normal">∣</mi><mi>a</mi><mi mathvariant="normal">∣</mi><mtext> </mtext><mi mathvariant="normal">∣</mi><mi>b</mi><mi mathvariant="normal">∣</mi></mrow></mfrac><mo>=</mo><mi>cos</mi><mo>⁡</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">\frac{a\cdot b}{|a|\ |b|}=\cos \theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.400108em;vertical-align:-0.52em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801079999999999em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∣</span><span class="mord mathnormal mtight">a</span><span class="mord mtight">∣</span><span class="mspace mtight"><span class="mtight"> </span></span><span class="mord mtight">∣</span><span class="mord mathnormal mtight">b</span><span class="mord mtight">∣</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mbin mtight">⋅</span><span class="mord mathnormal mtight">b</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.52em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></li>
+<li>-1 = vectors point in opposite directions</li>
+<li>+1 = vectors point in the same directions</li>
+<li>
+<ul>
+<li>= vectors are orthogonal (perpendicular, form 90 degrees)</li>
+</ul>
+</li>
+<li>but since raw frequency values are non-negative, the cosine for term-term matrix vectors range from 0-1</li>
+</ul>
+</li>
+</ul>
+<h2 id="66-tf-idf">6.6. TF-IDF</h2>
+<ul>
+<li>raw frequency is a <em>bad representation</em>
+<ul>
+<li>co-occurrence matrices we have seen represent each cell by word frequencies</li>
+<li>frequency is clearly useful, if sugar appears a lot near apricot, that is useful information</li>
+<li>but overly frequent words like the, it, or they are not very informative about the context</li>
+<li>how can we balance these two conflicting constraints?</li>
+</ul>
+</li>
+<li><strong>solutions for word weighting</strong>
+<ul>
+<li><strong>tf-idf</strong> - turn-frequency-inverse document frequency (tf-idf) for word t in document d
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub><mo>=</mo><mi>t</mi><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub><mo>×</mo><mi>i</mi><mi>d</mi><msub><mi>f</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">w_{t,d}=tf_{t,d}\times idf_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord mathnormal">t</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">i</span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
+<li>words like the or it have very low idf</li>
+</ul>
+</li>
+<li><strong>pointwise mutual information (PMI)</strong> - see if words like good appear more often with great than we would expect by chance
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>M</mi><mi>I</mi><mo stretchy="false">(</mo><msub><mi>w</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>w</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo>=</mo><mi>log</mi><mo>⁡</mo><mfrac><mrow><mi>p</mi><mo stretchy="false">(</mo><msub><mi>w</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>w</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><mrow><mi>p</mi><mo stretchy="false">(</mo><msub><mi>w</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mi>p</mi><mo stretchy="false">(</mo><msub><mi>w</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">PMI(w_1,w_2)=\log \frac{p(w_1,w_2)}{p(w_1)p(w_2)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">PM</span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.53em;vertical-align:-0.52em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span><span class="mord mathnormal mtight">p</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mpunct mtight">,</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.02691em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.52em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>turn frequency (tf)</strong> - <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub><mo>=</mo><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>d</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">tf_{t,d}=count(t,d)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord mathnormal">t</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">co</span><span class="mord mathnormal">u</span><span class="mord mathnormal">n</span><span class="mord mathnormal">t</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">d</span><span class="mclose">)</span></span></span></span>
+<ul>
+<li>instead of using raw count, we can squash it a bit: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub><mo>=</mo><mi>log</mi><mo>⁡</mo><mi>b</mi><mi>a</mi><mi>s</mi><mi>e</mi><mn>10</mn><mtext> </mtext><mo stretchy="false">(</mo><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>d</mi><mo stretchy="false">)</mo><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">tf_{t,d}=\log base10\ (count(t,d)+1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord mathnormal">t</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">ba</span><span class="mord mathnormal">se</span><span class="mord">10</span><span class="mspace"> </span><span class="mopen">(</span><span class="mord mathnormal">co</span><span class="mord mathnormal">u</span><span class="mord mathnormal">n</span><span class="mord mathnormal">t</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">d</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+</li>
+<li><strong>document frequency (df)</strong>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>f</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">df_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> is the number of documents <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathnormal">t</span></span></span></span> occurs in</li>
+<li>this is <em>not collection frequency</em> - total count across all documents</li>
+</ul>
+</li>
+<li><strong>inverse document frequency (idf)</strong>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mi>d</mi><msub><mi>f</mi><mi>t</mi></msub><mo>=</mo><mi>log</mi><mo>⁡</mo><mi>b</mi><mi>a</mi><mi>s</mi><mi>e</mi><mn>10</mn><mtext> </mtext><mo stretchy="false">(</mo><mfrac><mi>N</mi><mrow><mi>d</mi><msub><mi>f</mi><mi>t</mi></msub></mrow></mfrac><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">idf_t=\log base10\ (\frac{N}{df_t})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">i</span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.3534389999999998em;vertical-align:-0.481108em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">ba</span><span class="mord mathnormal">se</span><span class="mord">10</span><span class="mspace"> </span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.872331em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.29634285714285713em;"><span style="top:-2.357em;margin-left:-0.10764em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.481108em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span>, N is the total number of documents in the collection</li>
+</ul>
+</li>
+<li><strong>document</strong> - can be anything, often call each paragraph a document</li>
+<li><strong>final tf-idf weighted value</strong> for a word
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub><mo>=</mo><mi>t</mi><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub><mo>×</mo><mi>i</mi><mi>d</mi><msub><mi>f</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">w_{t,d}=tf_{t,d}\times idf_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.02691em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord mathnormal">t</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">i</span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
+</ul>
+</li>
+</ul>
+<h2 id="67-sparse-vs-dense-vectors">6.7. Sparse vs. Dense Vectors</h2>
+<ul>
+<li>tf-idf or PMI vectors are
+<ul>
+<li><em>long</em> - length |V| = 20,000 to 50,000</li>
+<li><em>sparse</em> - most elements are 0</li>
+</ul>
+</li>
+<li><strong>alternative</strong> - learn vectors which are
+<ul>
+<li><em>short</em> - length 50 to 1,000</li>
+<li><em>dense</em> - most elements are non-zero</li>
+</ul>
+</li>
+<li>why <strong>dense vectors</strong>?
+<ul>
+<li>short vectors may be <em>easier</em> to use as <em>features</em> in ML - fewer weights to tune</li>
+<li>dense vectors may <em>generalize</em> better than explicit counts</li>
+<li>dense vectors may do better at capturing synonymy
+<ul>
+<li>car and automobile are synonyms, but are distinct dimensions</li>
+<li>a word with car as a neighbor and a word with automobile as a neighbor should be similar, but are not</li>
+</ul>
+</li>
+<li><strong>in practice, they work better</strong></li>
+</ul>
+</li>
+<li>common methods for getting <em>short dense vectors</em>
+<ul>
+<li>&quot;neural language model&quot; inspired models - word2vec, GloVe</li>
+<li>singular value decomposition (SVD) - special case is Latent Semantic Analysis (LSA)</li>
+<li>alternatives to these static embeddings
+<ul>
+<li>contextual embeddings (ELMo, BERT)</li>
+<li>compute distinct embeddings for a word in its context</li>
+<li>separate embeddings for each token of a word</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="68-word2vec">6.8. Word2vec</h2>
+<ul>
+<li>popular embedding method</li>
+<li>very fast to train</li>
+<li>code available on the web provided by Google</li>
+<li><strong>idea</strong> - <em>predict</em> rather than <em>count</em></li>
+<li>provides various options, such as skip-gram or continuous bag of words (CBOW)
+<ul>
+<li>we will use skip-gram</li>
+</ul>
+</li>
+<li>instead of <em>counting</em> how often each word <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> occurs near apricot, train a <strong>classifier</strong> on a <strong>binary prediction</strong> task
+<ul>
+<li>is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> likely to show up near apricot?</li>
+<li>don't actually care about this task, but we will take the learned classifier weights as the <em>word embeddings</em></li>
+</ul>
+</li>
+<li><strong>big idea</strong> - <strong>self supervision</strong>
+<ul>
+<li>a word c that occurs near apricot in the corpus acts as the gold correct answer for supervised learning</li>
+<li>no need for human labels</li>
+</ul>
+</li>
+<li><strong>approach</strong> - predict if candidate word c is a <em>neighbor</em>
+<ol>
+<li>treat the target word t and a neighboring context word c as <strong>positive examples</strong></li>
+<li>randomly sample other words in the lexicon to get <strong>negative examples</strong></li>
+<li>use <em>logistic regression</em> to train a classifier to distinguish those two cases</li>
+<li>use the learned weights as the embeddings</li>
+</ol>
+</li>
+<li><strong>skip-gram training data</strong> - assume a +/- 2 word window, given training sentence
+<ul>
+<li><img src="file:///d:\Spoken Dialogue Systems\Notes\images\vector4.png" alt=""></li>
+<li>target is apricot, google slides didn't make it go under right word -_-</li>
+<li><strong>goal</strong> - train a classifier that is given a candidate (word, context) pair and assigns each pair a probability
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mo>+</mo><mi mathvariant="normal">∣</mi><mi>w</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mi>P</mi><mo stretchy="false">(</mo><mo>−</mo><mi mathvariant="normal">∣</mi><mi>w</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><mi>P</mi><mo stretchy="false">(</mo><mo>+</mo><mi mathvariant="normal">∣</mi><mi>w</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(+|w,c), P(-|w,c)=1-P(+|w,c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord">+</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord">−</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord">+</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>similarity</strong> is computed from dot product
+<ul>
+<li>two vectors are <em>similar</em> if they have a high dot product</li>
+<li>cosine is just a <em>normalized</em> dot product</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>l</mi><mi>a</mi><mi>r</mi><mi>i</mi><mi>t</mi><mi>y</mi><mo stretchy="false">(</mo><mi>w</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo><mo>∝</mo><mi>w</mi><mo>⋅</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">similarity(w,c)\propto w\cdot c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">imi</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">i</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∝</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.44445em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">c</span></span></span></span>
+<ul>
+<li>similarity is proportional to the dot product</li>
+</ul>
+</li>
+<li>have to normalize to get a probability, cosine is not a probability either
+<ul>
+<li>use the sigmoid from <em>logistic regression</em>
+<ul>
+<li>and there is where I don't think we went over anything more</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
